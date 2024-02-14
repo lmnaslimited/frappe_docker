@@ -19,6 +19,11 @@ RUN useradd -ms /bin/bash frappe \
     vim \
     nginx \
     gettext-base \
+    # chinese font packages
+    fonts-wqy-microhei \
+    ttf-wqy-microhei \
+    fonts-wqy-zenhei \
+    ttf-wqy-zenhei \
     # weasyprint dependencies
     libpango-1.0-0 \
     libharfbuzz0b \
