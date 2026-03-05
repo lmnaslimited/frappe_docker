@@ -68,6 +68,10 @@ RUN useradd -ms /bin/bash frappe \
     # Clean up
     && rm -rf /var/lib/apt/lists/* \
     && rm -fr /etc/nginx/sites-enabled/default \
+    # Fix : Pin setuptools below 82 (fix pkg_resources issue)
+    # --no-cache-dir flag does not allow pip to stores wheel cache inside image
+    # result is reducing image size
+    && pip3 install --no-cache-dir "setuptools==81.0.0" \
     && pip3 install frappe-bench \
     # Fixes for non-root nginx and logs to stdout
     && sed -i '/user www-data/d' /etc/nginx/nginx.conf \
@@ -137,6 +141,8 @@ RUN export APP_INSTALL_ARGS="" && \
     --verbose \
     /home/frappe/frappe-bench && \
   cd /home/frappe/frappe-bench && \
+  # Fix : Install setuptools version 81.0.0 inside bench venv too
+  ./env/bin/pip install --no-cache-dir "setuptools==81.0.0" && \
   echo "{}" > sites/common_site_config.json && \
   find apps -mindepth 1 -path "*/.git" | xargs rm -fr
 
