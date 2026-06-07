@@ -146,6 +146,12 @@ USER frappe
 
 COPY --from=builder --chown=frappe:frappe /home/frappe/frappe-bench /home/frappe/frappe-bench
 
+# Frappe Operator mounts a PVC over sites/assets. Keep an unmounted copy so
+# its initialization jobs can populate that PVC without hiding image assets.
+COPY --from=builder --chown=frappe:frappe /home/frappe/frappe-bench/sites/assets /home/frappe/assets_cache
+
+RUN test -s /home/frappe/assets_cache/assets.json
+
 WORKDIR /home/frappe/frappe-bench
 
 VOLUME [ \
