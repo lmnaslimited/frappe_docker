@@ -143,6 +143,14 @@ RUN export APP_INSTALL_ARGS="" && \
   cd /home/frappe/frappe-bench && \
   # Fix : Install setuptools version 81.0.0 inside bench venv too
   ./env/bin/pip install --no-cache-dir "setuptools==81.0.0" && \
+  # Build LensCloud frontend if present
+  if [ -d "apps/lenscloud/frontend" ]; then \
+      echo "Building LensCloud frontend..."; \
+      cd apps/lenscloud/frontend && \
+      npm install && \
+      npm run build && \
+      cd /home/frappe/frappe-bench; \
+  fi && \
   echo "{}" > sites/common_site_config.json && \
   find apps -mindepth 1 -path "*/.git" | xargs rm -fr
 
