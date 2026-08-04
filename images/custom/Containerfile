@@ -147,7 +147,9 @@ RUN export APP_INSTALL_ARGS="" && \
   if [ -d "apps/lenscloud/frontend" ]; then \
       echo "Building LensCloud frontend..."; \
       cd apps/lenscloud/frontend && \
-      npm install && \
+      npm ci && \
+      npm run test:realtime-config && \
+      npm run test:realtime && \
       npm run build && \
       cd /home/frappe/frappe-bench; \
   fi && \
