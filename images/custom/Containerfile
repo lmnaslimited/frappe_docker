@@ -87,6 +87,10 @@ RUN useradd -ms /bin/bash frappe \
 
 FROM base AS builder
 
+# Define the build arguments of Posthog inside the builder stage
+ARG VITE_POSTHOG_PROJECT_TOKEN
+ARG VITE_POSTHOG_HOST
+
 RUN apt-get update \
     && DEBIAN_FRONTEND=noninteractive apt-get install --no-install-recommends -y \
     # For frappe framework
@@ -150,6 +154,9 @@ RUN export APP_INSTALL_ARGS="" && \
       npm ci && \
       npm run test:realtime-config && \
       npm run test:realtime && \
+      # Pass the variable explicitly into npm run build (or let Vite inherit them from ARG environment)
+      VITE_POSTHOG_PROJECT_TOKEN="${VITE_POSTHOG_PROJECT_TOKEN}" \
+      VITE_POSTHOG_HOST="${VITE_POSTHOG_HOST}" \
       npm run build && \
       cd /home/frappe/frappe-bench; \
   fi && \
